@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to Shotgun Event Daemon’s documentation! &mdash; Shotgun Events Daemon v0.9 documentation</title>
+    <title>Shotgun Event Daemon &mdash; Shotgun Events Daemon v0.9 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Shotgun Events Daemon v0.9 documentation" href="#" />
-    <link rel="next" title="Plugins" href="api.html" /> 
+    <link rel="next" title="Installation" href="installation.html" /> 
   </head>
   <body>
     <div class="related">
@@ -33,7 +33,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="api.html" title="Plugins"
+          <a href="installation.html" title="Installation"
              accesskey="N">next</a> |</li>
         <li><a href="#">Shotgun Events Daemon v0.9 documentation</a> &raquo;</li> 
       </ul>
@@ -44,14 +44,46 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="welcome-to-shotgun-event-daemon-s-documentation">
-<h1>Welcome to Shotgun Event Daemon&#8217;s documentation!<a class="headerlink" href="#welcome-to-shotgun-event-daemon-s-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="shotgun-event-daemon">
+<h1>Shotgun Event Daemon<a class="headerlink" href="#shotgun-event-daemon" title="Permalink to this headline">¶</a></h1>
 <p>This software was originaly developed by <a class="reference external" href="http://www.patrickboucher.com">Patrick Boucher</a> with support from <a class="reference external" href="http://rodeofx.com">Rodeo Fx</a> and <a class="reference external" href="http://obliquefx.com">Oblique</a>, it is now part of
 <a class="reference external" href="http://www.shotgunsoftware.com">Shotgun Software</a>&#8216;s <a class="reference external" href="https://github.com/shotgunsoftware">open source initiative</a>.</p>
 <p>This software is provided under the MIT License that can be found in the LICENSE
 file or here: <a class="reference external" href="http://www.opensource.org/licenses/mit-license.php">http://www.opensource.org/licenses/mit-license.php</a></p>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#system-requirements">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-shotgun-api">Installing Shotgun API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-shotgunevents">Installing shotgunEvents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#cloning-the-source">Cloning the source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#downloading-the-archive">Downloading the archive</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#edit-shotguneventdaemon-conf">Edit shotgunEventDaemon.conf</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#shotgun-settings">Shotgun Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#plugin-settings">Plugin Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#location-of-shotguneventdaemon-conf">Location of shotgunEventDaemon.conf</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#testing-the-daemon">Testing the daemon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#running-the-daemon">Running the daemon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#common-errors">Common Errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#list-of-configuration-file-settings">List of Configuration File Settings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#daemon-settings">Daemon Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#id1">Shotgun Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#id2">Plugin Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configuration.html#email-settings">Email Settings</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Plugins</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api.html#overview">Overview</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api.html#registercallbacks-function">registerCallbacks function</a></li>
@@ -73,6 +105,7 @@ file or here: <a class="reference external" href="http://www.opensource.org/lice
 </ul>
 </li>
 </ul>
+</div>
 </div>
 <div class="section" id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
@@ -151,7 +184,10 @@ scalability.</li>
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Welcome to Shotgun Event Daemon&#8217;s documentation!</a><ul>
+<li><a class="reference internal" href="#">Shotgun Event Daemon</a><ul>
+<li><a class="reference internal" href="#contents">Contents</a><ul>
+</ul>
+</li>
 <li><a class="reference internal" href="#overview">Overview</a></li>
 <li><a class="reference internal" href="#advantages-of-the-framework">Advantages of the framework</a></li>
 <li><a class="reference internal" href="#known-issues">Known Issues</a></li>
@@ -162,8 +198,8 @@ scalability.</li>
 </ul>
 
   <h4>Next topic</h4>
-  <p class="topless"><a href="api.html"
-                        title="next chapter">Plugins</a></p>
+  <p class="topless"><a href="installation.html"
+                        title="next chapter">Installation</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"
@@ -193,14 +229,14 @@ scalability.</li>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="api.html" title="Plugins"
+          <a href="installation.html" title="Installation"
              >next</a> |</li>
         <li><a href="#">Shotgun Events Daemon v0.9 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011, Patrick Boucher.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.6.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>
