@@ -1,0 +1,56 @@
+Name:           shotgunEvents
+Version:        __VERSION__
+Release:        __RELEASE__%{?dist}
+Summary:        Shotgun Event Trigger Framework
+
+Group:          Application/Production
+License:        Disney
+URL:            git@github.com:cmihaly/shotgunEvents.git
+Source0:        http://gitweb/projects/shotgunEvents/%{name}-%{version}.tar.gz
+
+BuildArch:      noarch
+BuildRequires:  GitPython
+BuildRequires:  pathfinder
+BuildRequires:  python
+BuildRequires:  python-decorator
+BuildRequires:  shotgun
+Requires:       bash
+Requires:       pathfinder
+Requires:       python
+Requires:       shotgun
+Requires:       python-decorator
+
+BuildRoot:      %{_topdir}/BUILDROOT/%{name}-%{version}
+
+prefix: %{_prefix}
+
+%description
+shotgunEvents is an open source Shotgun Event Trigger framework
+
+%prep
+%setup -q
+
+%build
+
+%install
+make DESTDIR=%{buildroot} prefix=%{_prefix} libdir=%{_libdir} install
+make DESTDIR=%{buildroot} prefix=%{_prefix} libdir=%{_libdir} install-doc
+
+%clean
+rm -rf %{buildroot}
+
+%post
+
+%postun
+
+%files
+%defattr(-,root,root,-)
+%{_bindir}/*
+%{_libdir}/python*/site-packages/*
+%{_datadir}/applications/pmDrafting.desktop
+%{_datadir}/prodman
+%{_docdir}/prodman
+
+%changelog
+* Fri Jan 6 2012 Chris Mihaly <chris.mihaly@disneyanimation.com> 
+- Initial cut

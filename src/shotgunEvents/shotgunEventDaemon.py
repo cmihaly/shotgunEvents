@@ -27,9 +27,8 @@ __version__ = '0.9'
 __version_info__ = (0, 9)
 
 import ConfigParser
-import datetime
+import datetime 
 import imp
-import logging
 import logging.handlers
 import os
 import pprint
@@ -38,6 +37,7 @@ import sys
 import time
 import types
 import traceback
+import argparse
 
 try:
     import cPickle as pickle
@@ -46,7 +46,7 @@ except ImportError:
 
 import daemonizer
 import shotgun_api3 as sg
-
+                                    
 
 EMAIL_FORMAT_STRING = """Time: %(asctime)s
 Logger: %(name)s
@@ -341,7 +341,7 @@ class Engine(daemonizer.Daemon):
                 order = [{'column':'id', 'direction':'desc'}]
                 try:
                     result = self._sg.find_one("EventLogEntry", filters=[], fields=['id'], order=order)
-                except (sg.ProtocolError, sg.ResponseError, socket.err), err:
+                except (sg.ProtocolError, sg.ResponseError, socket.err), err: #@UndefinedVariable  
                     conn_attempts = self._checkConnectionAttempts(conn_attempts, str(err))
                 except Exception, err:
                     msg = "Unknown error: %s" % str(err)
@@ -441,7 +441,7 @@ class Engine(daemonizer.Daemon):
             for collection in self._pluginCollections:
                 self._eventIdData[collection.path] = collection.getState()
 
-            for colPath, state in self._eventIdData.items():
+            for dummy_colPath, state in self._eventIdData.items():
                 if state:
                     try:
                         fh = open(eventIdFile, 'w')
@@ -597,7 +597,7 @@ class Plugin(object):
         else:
             nextId = None
 
-        now = datetime.datetime.now()
+        now = datetime.datetime.now() #@UndefinedVariable  
         for k in self._backlog.keys():
             v = self._backlog[k]
             if v < now:
@@ -717,7 +717,7 @@ class Plugin(object):
 
     def _updateLastEventId(self, eventId):
         if self._lastEventId is not None and eventId > self._lastEventId + 1:
-            expiration = datetime.datetime.now() + datetime.timedelta(minutes=5)
+            expiration = datetime.datetime.now() + datetime.timedelta(minutes=5) #@UndefinedVariable  
             for skippedId in range(self._lastEventId + 1, eventId):
                 self.logger.debug('Adding event id %d to backlog.', skippedId)
                 self._backlog[skippedId] = expiration
@@ -910,28 +910,36 @@ class EventDaemonError(Exception):
 class ConfigError(EventDaemonError):
     pass
 
+def parseArgs():
+    '''
+        Get the command line args
+    '''
+    parser = argparse.ArgumentParser(description='Run Shotgun Event Daemon')
+    parser.add_argument('-s', '--server', dest='server', help='Shotgun Server Host',
+                        default="From Config File")
+    parser.add_argument('-c', '--config', dest='configFile',
+                        action = 'store', 
+                        help = 'Config File Location',
+                        default=False)
+    parser.add_argument('op', choices = ['start', 'stop', 'restart', 'foreground'], 
+                        help = 'daemon operation')
+    return parser.parse_args()
 
 def main():
-    if len(sys.argv) == 2:
-        daemon = Engine(_getConfigPath())
+    cmdOptions = parseArgs()
+    daemon = Engine(_getConfigPath())
 
-        # Find the function to call on the daemon
-        action = sys.argv[1]
-        func = getattr(daemon, action, None)
+    # Find the function to call on the daemon
+    func = getattr(daemon, cmdOptions.op, None)
 
-        # If no function was found, report error.
-        if action[:1] == '_' or func is None:
-            print "Unknown command: %s" % action
-            return 2
-
-        # Call the requested function
-        func()
-    else:
-        print "usage: %s start|stop|restart|foreground" % sys.argv[0]
+    # If no function was found, report error.
+    if func is None:
+        print "Unknown command: %s" % cmdOptions.op 
         return 2
 
+    # Call the requested function
+    func()
     return 0
-
 
 def _getConfigPath():
     """
