@@ -10,6 +10,7 @@ src/shotgunEvents/_version.py
 /config.mak
 /doc
 /.release.txt
+docs/_build
 *~
 *#
 .#*
