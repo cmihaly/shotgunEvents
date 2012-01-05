@@ -34,7 +34,6 @@ shotgunEvents is an open source Shotgun Event Trigger framework
 
 %install
 make DESTDIR=%{buildroot} prefix=%{_prefix} libdir=%{_libdir} install
-make DESTDIR=%{buildroot} prefix=%{_prefix} libdir=%{_libdir} install-doc
 
 %clean
 rm -rf %{buildroot}
@@ -45,11 +44,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%{_bindir}/*
+#%{_bindir}/*
 %{_libdir}/python*/site-packages/*
-%{_datadir}/applications/pmDrafting.desktop
-%{_datadir}/prodman
-%{_docdir}/prodman
 
 %changelog
 * Fri Jan 6 2012 Chris Mihaly <chris.mihaly@disneyanimation.com> 
