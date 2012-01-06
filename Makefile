@@ -77,4 +77,4 @@ release: install
 	scripts/release -a Linux-x86_64:all -- $(release_flags)
 	scripts/release -a Darwin:all -- $(release_flags)
 
-.PHONY: test test-install clean coverage doc makevars rpm cleanrpm pkg
+.PHONY: test test-install clean coverage makevars rpm cleanrpm pkg

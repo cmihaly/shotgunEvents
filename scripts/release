@@ -1,0 +1,121 @@
+#!/bin/sh
+unset CDPATH
+
+cd $(dirname $0)/..
+
+function usage()
+{
+    echo "usage: release --version <VERSION> --arch <RELEASE_ARCH> [--] [<rprelease options>]"
+    exit 1
+}
+
+# Default to e.g. Linux-x86_64:all
+RELEASE_ARCH=$(uname)-$(uname -p):all
+VERSION=$(git version-gen)
+SOURCE_VERSION=$(git describe --tags --always)
+RELEASE_FILE=/tmp/release.$$.txt
+DEP_FILE=/tmp/dep.$$.txt
+LIB=lib
+
+while test $# -gt 0; do
+    case "$1" in
+    -v|--version)
+        shift
+        VERSION="$1"
+        shift
+        ;;
+    -a|--arch)
+        shift
+        RELEASE_ARCH="$1"
+        shift
+        ;;
+    -l|--libdir)
+        shift
+        LIB="$1"
+        shift
+        ;;
+    --)
+        shift
+        break
+        ;;
+    help|-*)
+        usage
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+CLEAN_VERSION=$(git version-gen | sed -e s/-dirty//)
+if test "$(git version-gen)" != "$CLEAN_VERSION"; then
+    echo
+    echo "Oops!  You have uncommitted changes:"
+    echo
+    git diff-index --name-status HEAD
+    echo
+    echo "Thou shall not pass."
+    echo
+    exit 1
+fi
+
+echo "Releasing source $SOURCE_VERSION"
+
+INSTALLROOT="$(uname)-$(fa.arch -r)-$(uname -p)-${FLAVOR-optimize}"
+test -n "$HOST_BUILDDIR" && INSTALLROOT="$HOST_BUILDDIR"
+
+test -d "$PWD"/"$INSTALLROOT" && rm -rf "$PWD"/"$INSTALLROOT"
+
+make clean
+
+if ! make install \
+        prefix="$PWD"/"$INSTALLROOT" \
+        pylibs="$PWD/$INSTALLROOT/$LIB/python2.6/site-packages"
+then
+    echo
+    echo "make install failed."
+    echo "aborting release..."
+    echo
+    exit 1
+fi
+#if ! make install-doc \
+#        prefix="$PWD"/"$INSTALLROOT" \
+#        pylibs="$PWD/$INSTALLROOT/$LIB/python2.6/site-packages"
+#then
+#    echo
+#    echo "make install-doc failed."
+#    echo "aborting release..."
+#    echo
+#    exit 1
+#fi
+
+cd "$INSTALLROOT"
+/bin/ls -1 > "$RELEASE_FILE"
+
+echo "" > "$DEP_FILE"
+
+if ! test -d $LIB/python2.6 && test -d $LIB/python2.5; then
+    (cd $LIB && ln -s python2.5 python2.6)
+
+elif ! test -d $LIB/python2.5 && test -d $LIB/python2.6; then
+    (cd $LIB && ln -s python2.6 python2.5)
+fi
+
+# Do no release test files; we're wasting space on the rel server
+find . -name tests -type d -print0 | xargs -0 rm -fr
+
+rprelease \
+    -prod shotgunEvents \
+    -version "$VERSION" \
+    -desc "shotgunEvents $SOURCE_VERSION" \
+    -c "shotgunEvents $SOURCE_VERSION" \
+    -verbose \
+    -noVOB \
+    -dep "$DEP_FILE" \
+    -force \
+    -full \
+    -file "$RELEASE_FILE" \
+    -arch "$RELEASE_ARCH" "$@" &&
+rm -f "$RELEASE_FILE" &&
+cd .. &&
+rm -rf "$PWD"/"$INSTALLROOT"
