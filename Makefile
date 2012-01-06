@@ -20,6 +20,8 @@ share ?= $(DESTDIR)$(shell $(pfmakevar) share)
 data ?= $(DESTDIR)$(shell $(pfmakevar) data shotgunEvents)
 srcdata ?= $(shell pf-makevar data shotgunEvents)
 rsync ?= rsync -ar --omit-dir-times --delete --exclude=.pythoscope --exclude='*.swp' --exclude='*~' --exclude tests
+docsreldir = /share/WWW/htdocs/new/technology/software/products/shotgunEvents
+docinstdir ?= $(DESTDIR)$(shell $(pfmakevar) doc shotgunEvents)
 release_flags=
 
 python_inc ?= $(shell pf-makevar python-inc)
@@ -38,7 +40,7 @@ makevars:
 	(echo "error: undefined build variables: is pathfinder installed?"; \
 	 false)
 
-install: makevars 
+install: makevars  install-doc
 	@mkdir -p $(pylibs)
 	$(rsync) --exclude=tests src/shotgunEvents  $(pylibs)/
 
@@ -58,11 +60,27 @@ clean: makevars
 	rm -f .cache
 	rm -f src/shotgunEvents/_version.py*
 	rm -fr $(pylibs)/shotgunEvents/
+	rm -fr $(docinstdir)/* $(docinstdir)/.buildinfo
+	rmdir -p $(docinstdir) || true
 	rmdir -p $(pylibs) 2>/dev/null || true
 
 pylint:
 	@env PYTHONPATH="$(CURDIR)/src":"$(CURDIR)/lib":"$(PYTHONPATH)" \
         pylint --rcfile $(CURDIR)/.pylintrc -f parseable --disable=R0801,E1101,I0011,E0611 --ignore=tests, src  
+
+release-docs:
+	mkdir -p $(docsreldir)
+	chmod -R 775 doc
+	cd /docs && \
+	make html && \
+	chmod -R 775 _build/html && \
+	$(rsync) _build/html/ $(docsreldir)/api/
+
+install-doc:
+	mkdir -p $(docinstdir)
+	cd docs && \
+	$(MAKE) html && \
+	$(rsync) _build/html/ $(docinstdir)/
 
 rpm:
 	git make-rpm
@@ -73,7 +91,7 @@ cleanrpm:
 	rm -rf /disk1/scratch/rpmbuild/BUILD/shotgunEvents-*
 	rm -rf /disk1/scratch/rpmbuild/BUILDROOT/shotgunEvents-*
 
-release: install
+release: release-docs install
 	scripts/release -a Linux-x86_64:all -- $(release_flags)
 	scripts/release -a Darwin:all -- $(release_flags)
 
