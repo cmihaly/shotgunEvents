@@ -70,8 +70,8 @@ pylint:
 
 release-docs:
 	mkdir -p $(docsreldir)
-	chmod -R 775 doc
-	cd /docs && \
+#	chmod -R 775 doc
+	cd docs && \
 	make html && \
 	chmod -R 775 _build/html && \
 	$(rsync) _build/html/ $(docsreldir)/api/
